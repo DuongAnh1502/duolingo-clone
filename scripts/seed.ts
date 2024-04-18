@@ -12,6 +12,8 @@ const main = async () => {
         console.log("Seeding database");
         await db.delete(schema.courses);
         await db.delete(schema.userProgress);
+        await db.delete(schema.lessons);
+        await db.delete(schema.units);
         await db.delete(schema.challengeOptions);
         await db.delete(schema.challengeProgress);
         await db.insert(schema.courses).values([
@@ -39,6 +41,65 @@ const main = async () => {
                 id: 5,
                 title: "Japanese",
                 imageSrc: "/jp.svg",
+            },
+        ]);
+        await db.insert(schema.units).values([
+            {
+                id: 1,
+                courseId: 1,
+                title: "Unit 1",
+                description: "Learn the basics of Spanish",
+                order: 1,
+            },
+        ]);
+        await db.insert(schema.lessons).values([
+            {
+                id: 1,
+                unitId: 1, // Unit 1 (learn the basic)
+                order: 1,
+                title: "Nouns",
+            },
+            {
+                id: 2,
+                unitId: 1, // Unit 1 (learn the basic)
+                order: 2,
+                title: "Verbs",
+            },
+        ]);
+        await db.insert(schema.challenges).values([
+            {
+                id: 1,
+                lessonId: 1, //Nouns
+                type: "SELECT",
+                order: 1,
+                question: 'Which one of these is the "the man"?',
+            },
+        ]);
+
+        await db.insert(schema.challengeOptions).values([
+            {
+                id: 1,
+                challengeId: 1,
+                imageSrc: "/man.svg",
+                correct: true,
+                text: "el hombre",
+                audioSrc: "/es_man.mp3",
+            },
+            {
+                id: 2,
+                challengeId: 1, // Which one of these is the "the man"?
+                imageSrc: "/woman.svg",
+                correct: false,
+                text: "la mujer",
+                audioSrc: "/es_woman.mp3",
+            },
+            {
+                id: 3,
+                challengeId: 1, // Which one of these is the "the man"?
+                imageSrc: "/robot.svg",
+                correct: false,
+                text: "el robot",
+                audioSrc: "/es_robot.mp3",
             },
         ]);
         console.log("Seeding finished");
