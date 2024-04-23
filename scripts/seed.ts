@@ -71,6 +71,18 @@ const main = async () => {
                 order: 2,
                 title: "ProNouns",
             },
+            {
+                id: 4,
+                unitId: 1, // Unit 1 (learn the basic)
+                order: 2,
+                title: "ProNouns",
+            },
+            {
+                id: 5,
+                unitId: 1, // Unit 1 (learn the basic)
+                order: 2,
+                title: "ProNouns",
+            },
         ]);
         await db.insert(schema.challenges).values([
             {

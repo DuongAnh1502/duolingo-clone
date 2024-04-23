@@ -40,7 +40,7 @@ export const Unit = ({
                             id={lesson.id}
                             index={index}
                             totalCount={lessons.length - 1}
-                            current={true || isCurrent} //TODO: Remove hardcoded value
+                            current={isCurrent} //TODO: Remove hardcoded value
                             locked={isLocked}
                             percentage={activeLessonPercentage}
                         />
