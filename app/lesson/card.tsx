@@ -73,6 +73,7 @@ export const Card = ({
                     )}
                 >
                     {text}
+                    test
                 </p>
                 <div
                     className={cn(
