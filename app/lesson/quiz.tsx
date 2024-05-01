@@ -2,10 +2,12 @@
 
 import { challengeOptions, challenges } from "@/db/schema";
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { Header } from "./header";
 import { QuestionBubble } from "./question-bubble";
 import { Challenge } from "./challenge";
 import { Footer } from "./footer";
+import { upsertChallengeProgress } from "@/actions/challenge-progress";
 
 type Props = {
     initialLessonId: number;
@@ -67,7 +69,28 @@ export const Quiz = ({
 
         if (!correctOption) return;
         if (correctOption && correctOption.id === selectedOption) {
-            console.log("Correct Answer");
+            startTranstition(() => {
+                upsertChallengeProgress(challenge.id)
+                    .then((respone) => {
+                        if (respone?.error === "hearts") {
+                            console.error("Missing hearts");
+                            return;
+                        }
+
+                        setStatus("correct");
+                        setPercentage((prev) => prev + 100 / challenges.length);
+
+                        //This is a practice
+                        if (initialPercentage === 100) {
+                            setHearts((prev) => Math.min(prev + 1, 5));
+                        }
+                    })
+                    .catch(() =>
+                        toast.error(
+                            "Something went wrong. Please try again later."
+                        )
+                    );
+            });
         } else {
             console.log("Incorrect Answer");
         }
