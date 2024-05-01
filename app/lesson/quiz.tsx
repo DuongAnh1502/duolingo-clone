@@ -1,13 +1,16 @@
 "use client";
 
-import { challengeOptions, challenges } from "@/db/schema";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
+
 import { Header } from "./header";
 import { QuestionBubble } from "./question-bubble";
 import { Challenge } from "./challenge";
 import { Footer } from "./footer";
+
+import { challengeOptions, challenges } from "@/db/schema";
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
+import { reduceHearts } from "@/actions/user-progress";
 
 type Props = {
     initialLessonId: number;
@@ -92,7 +95,26 @@ export const Quiz = ({
                     );
             });
         } else {
-            console.log("Incorrect Answer");
+            startTranstition(() => {
+                reduceHearts(challenge.id)
+                    .then((response) => {
+                        if (response?.error === "hearts") {
+                            console.error("Missing hearts");
+                            return;
+                        }
+
+                        setStatus("wrong");
+
+                        if (!response?.error) {
+                            setHearts((prev) => Math.max(prev - 1, 0));
+                        }
+                    })
+                    .catch(() =>
+                        toast.error(
+                            "Something went wrong. Please try again later."
+                        )
+                    );
+            });
         }
     };
     const title =
@@ -121,7 +143,7 @@ export const Quiz = ({
                                 onSelect={onSelect}
                                 status={status}
                                 selectedOption={selectedOption}
-                                disabled={false}
+                                disabled={isPending}
                                 type={challenge.type}
                             />
                         </div>
@@ -129,7 +151,7 @@ export const Quiz = ({
                 </div>
             </div>
             <Footer
-                disabled={!selectedOption}
+                disabled={isPending || !selectedOption}
                 status={status}
                 onCheck={onContinue}
             />
