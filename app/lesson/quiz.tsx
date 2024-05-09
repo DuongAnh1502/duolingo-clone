@@ -11,11 +11,12 @@ import { Header } from "./header";
 import { QuestionBubble } from "./question-bubble";
 import { Challenge } from "./challenge";
 import { Footer } from "./footer";
+import { ResultCard } from "./result-card";
 
 import { challengeOptions, challenges } from "@/db/schema";
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
 import { reduceHearts } from "@/actions/user-progress";
-import { ResultCard } from "./result-card";
+import { useHeartsModal } from "@/store/use-hearts-modal";
 
 type Props = {
     initialLessonId: number;
@@ -35,6 +36,8 @@ export const Quiz = ({
     initialPercentage,
     userSubscription,
 }: Props) => {
+    const { open: openHeartsModal } = useHeartsModal();
+
     const { width, height } = useWindowSize();
     const router = useRouter();
     const [finishAudio] = useAudio({ src: "/finish.mp3", autoPlay: true });
@@ -92,7 +95,7 @@ export const Quiz = ({
                 upsertChallengeProgress(challenge.id)
                     .then((respone) => {
                         if (respone?.error === "hearts") {
-                            console.error("Missing hearts");
+                            openHeartsModal();
                             return;
                         }
 
@@ -116,7 +119,7 @@ export const Quiz = ({
                 reduceHearts(challenge.id)
                     .then((response) => {
                         if (response?.error === "hearts") {
-                            console.error("Missing hearts");
+                            openHeartsModal();
                             return;
                         }
 
