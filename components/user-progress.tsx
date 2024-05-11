@@ -11,7 +11,7 @@ type Props = {
     points: number;
     hasActiveSubscription: boolean;
 };
-export const UserProgess = ({
+export const UserProgress = ({
     activeCourse,
     hearts,
     points,
