@@ -59,7 +59,7 @@ export const Card = ({
             )}
             <div
                 className={cn(
-                    "flex items-center justify-between",
+                    "flex items-center justify-between sa",
                     type === "ASSIST" && "flex-row-reverse"
                 )}
             >
